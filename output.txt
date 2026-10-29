@@ -1,0 +1,94 @@
+=== DATASET HEAD ===
+   attendance_pct  temperature_c  menu_rating  exam_week  weekend  plates_sold
+0            86.4           36.2          3.2          0        0          323
+1            66.3           28.7          2.8          1        0          273
+2            91.5           31.8          3.6          0        0          353
+3            81.8           18.0          2.9          0        0          284
+4            45.7           24.2          3.7          0        0          170
+
+=== SHAPE === (605, 6)
+
+=== MISSING VALUES ===
+attendance_pct     0
+temperature_c      0
+menu_rating       10
+exam_week          0
+weekend            0
+plates_sold        0
+dtype: int64
+
+After cleaning: (600, 6) | missing = 0
+
+=== DESCRIPTIVE STATISTICS ===
+       attendance_pct  temperature_c  ...  weekend  plates_sold
+count          600.00         600.00  ...    600.0       600.00
+mean            69.76          29.83  ...      0.2       254.16
+std             17.23           4.99  ...      0.4        69.47
+min             40.30          15.00  ...      0.0        64.00
+25%             54.20          26.60  ...      0.0       200.75
+50%             69.95          30.00  ...      0.0       256.00
+75%             85.00          33.10  ...      0.0       310.00
+max             99.90          43.00  ...      1.0       399.00
+
+[8 rows x 6 columns]
+
+=== CORRELATION WITH PLATES SOLD ===
+attendance_pct    0.862
+temperature_c    -0.106
+menu_rating       0.270
+exam_week         0.182
+weekend          -0.349
+Name: plates_sold, dtype: float64
+
+Train size: 480 | Test size: 120
+
+=== MODEL COMPARISON (test set) ===
+            Model    MAE   RMSE    R2  CV_R2
+Linear Regression 15.030 19.675 0.916  0.924
+    Random Forest 14.525 18.563 0.925  0.927
+
+=== LINEAR REGRESSION COEFFICIENTS (standardised) ===
+attendance_pct    58.679
+temperature_c     -6.302
+menu_rating       14.564
+exam_week          6.704
+weekend          -22.987
+dtype: float64
+
+=== RANDOM FOREST FEATURE IMPORTANCE ===
+attendance_pct    0.798
+weekend           0.101
+menu_rating       0.060
+temperature_c     0.034
+exam_week         0.007
+dtype: float64
+
+=== PLANNER DEMO ===
+
+Day A: attendance=85%, temp=29C, rating=4.2, exam_week=0, weekend=0
+ Predicted plates: 335.7 -> High | buffer 10% | prepare 370
+    Breakfast    74 plates
+    Lunch       185 plates
+    Snacks      111 plates
+
+Day B: attendance=95%, temp=33C, rating=3.0, exam_week=1, weekend=0
+ Predicted plates: 343.4 -> High | buffer 15% | prepare 395
+    Breakfast    79 plates
+    Lunch       198 plates
+    Snacks      118 plates
+
+Day C: attendance=50%, temp=36C, rating=3.5, exam_week=0, weekend=1
+ Predicted plates: 136.1 -> Low | buffer 5% | prepare 143
+    Breakfast    29 plates
+    Lunch        72 plates
+    Snacks       43 plates
+
+=== WHAT-IF: weekday, 30C, rating 3.5, varying attendance ===
+  50% ->  203.6 (Normal)
+  65% ->  259.9 (Normal)
+  80% ->  299.1 (Normal)
+  95% ->  352.1 (High)
+
+=== FIXED POLICY (347 plates/day) vs PLANNER, 120 test days, demand=29636 ===
+Fixed  : {'prepared': 41640, 'leftover': 12138, 'shortage': 134, 'short_days': 10}
+Planner: {'prepared': 32049, 'leftover': 2606, 'shortage': 193, 'short_days': 17}
